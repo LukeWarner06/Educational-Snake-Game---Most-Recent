@@ -10,8 +10,32 @@
 */
 
 #include <SFML/Graphics.hpp>
+#include "GameManager.h"
 
 int main()
 {
-  
+    sf::RenderWindow window(sf::VideoMode({ 800, 800 }), "Educational Snake Game");
+    window.setFramerateLimit(60);
+    
+    GameManager gameManager;
+    gameManager.SetupGame();
+    
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+            }
+        }
+
+        gameManager.UpdateSnakeGame();
+
+        window.clear();
+        gameManager.DrawSnakeGame(window);
+        window.display();
+    }
+
+    return 0;
 }
