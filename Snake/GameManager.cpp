@@ -297,6 +297,3 @@ void GameManager::DrawGameOverScreen(sf::RenderWindow& window)
 	window.draw(gameOverText);
 	window.draw(finalScoreText);
 }
-
-
-
