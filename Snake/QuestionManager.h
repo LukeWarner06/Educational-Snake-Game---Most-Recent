@@ -39,5 +39,7 @@ public:
 	int GetAnswerValue();
 
 	void DrawCurrentQuestionOnScreen(sf::RenderWindow& window);
+
+	void ResetQuestion();
 };
 

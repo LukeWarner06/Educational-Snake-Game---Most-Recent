@@ -76,6 +76,7 @@ void GameManager::SetupGame()
 	delay = 0.15f;
 
 	numberManager.ClearAllNumbers();
+	questionManager.ResetQuestion();
 	SpawnNewNumber();
 }
 

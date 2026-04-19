@@ -69,3 +69,22 @@ void QuestionManager::DrawCurrentQuestionOnScreen(sf::RenderWindow& window)
 	questionText.setPosition({ screenPositionX, 10.f });
 	window.draw(questionText);
 }
+
+void QuestionManager::ResetQuestion()
+{
+	QuestionManager::currentQuestionState = QuestionState::FindFirstNumber;
+
+	firstNumber = 0;
+	secondNumber = 0;
+	answer = 0;
+
+	if (!font.openFromFile("assets/Times New Roman Bold.ttf"))
+	{
+		std::cout << "Could not load font" << std::endl;
+		exit(1);
+	}
+
+	questionText.setFont(font);
+	questionText.setCharacterSize(24);
+	questionText.setFillColor(sf::Color::White);
+}
