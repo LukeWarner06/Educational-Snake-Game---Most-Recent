@@ -1,6 +1,14 @@
 #include "Snake.h"
 #include <SFML/Window/Keyboard.hpp>
 
+Snake::Snake()
+{
+	snakeHead = nullptr;
+	snakeTail = nullptr;
+	isAlive = false;
+	hasEatenCorrectAnswer = false;
+}
+
 void Snake::DrawSnake(sf::RenderWindow& window, int tileSize)
 {
 	sf::RectangleShape snakeSegmentShape(sf::Vector2f(tileSize, tileSize));
@@ -64,6 +72,11 @@ Snake::~Snake()
 
 void Snake::MoveSnake()
 {
+	if (snakeHead == nullptr || !isAlive)
+	{
+		return;
+	}
+
 	sf::Vector2i newHeadPosition;
 	switch (currentSnakeDirection)
 	{
@@ -184,6 +197,10 @@ bool Snake::IsAlive()
 
 sf::Vector2i Snake::GetHeadPosition()
 {
+	if (snakeHead == nullptr)
+	{
+		return sf::Vector2i(0, 0);
+	}
 	return snakeHead->nodePosition;
 }
 

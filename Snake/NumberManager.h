@@ -20,5 +20,9 @@ public:
 	void SpawnNumber(int value, sf::Vector2i gridPos);
 	void DrawNumbers(sf::RenderWindow& window);
 	bool IsNumberAtPosition(sf::Vector2i gridPos);
+	int GetNumberValueAtGridPosition(sf::Vector2i gridPos);
+	void RemoveNumberAtGridPosition(sf::Vector2i gridPos);
+
+	void ClearAllNumbers();
 };
 

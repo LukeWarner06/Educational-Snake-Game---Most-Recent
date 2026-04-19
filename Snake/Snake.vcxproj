@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Collectible.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NumberManager.cpp" />
@@ -155,7 +154,6 @@
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collectible.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="NumberManager.h" />
     <ClInclude Include="QuestionManager.h" />

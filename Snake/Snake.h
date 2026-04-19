@@ -26,6 +26,7 @@ private:
 	Direction lastSnakeDirection;
 
 public:
+	Snake();
 	~Snake();
 
 	void CreateSnake();

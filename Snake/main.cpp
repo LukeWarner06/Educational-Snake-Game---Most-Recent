@@ -11,9 +11,12 @@
 
 #include <SFML/Graphics.hpp>
 #include "GameManager.h"
+#include "Snake.h"
 
 int main()
 {
+    srand(time(nullptr));
+
     sf::RenderWindow window(sf::VideoMode({ 800, 800 }), "Educational Snake Game");
     window.setFramerateLimit(60);
     
@@ -32,8 +35,9 @@ int main()
 
         gameManager.UpdateSnakeGame();
 
-        window.clear();
+        gameManager.ClearBackground(window);
         gameManager.DrawSnakeGame(window);
+
         window.display();
     }
 

@@ -11,7 +11,7 @@ NumberManager::NumberManager() : numberText(numberFont)
 
 	numberText.setFont(numberFont);
 	numberText.setCharacterSize(24);
-	numberText.setFillColor(sf::Color::White);
+	numberText.setFillColor(sf::Color::Yellow);
 }
 
 void NumberManager::SpawnNumber(int value, sf::Vector2i gridPos)
@@ -48,4 +48,35 @@ bool NumberManager::IsNumberAtPosition(sf::Vector2i gridPos)
 		}
 	}
 	return false;
+}
+
+int NumberManager::GetNumberValueAtGridPosition(sf::Vector2i gridPos)
+{
+	for (const auto& item : activeNumbers)
+	{
+		if (item.gridPos == gridPos)
+		{
+			return item.numberValue;
+		}
+	}
+	return -1;
+}
+
+
+// Removes number at grid position, after finding it using function from earlier.
+void NumberManager::RemoveNumberAtGridPosition(sf::Vector2i gridPos)
+{
+	for (int i = 0; i < activeNumbers.size(); i++)
+	{
+		if (activeNumbers[i].gridPos == gridPos)
+		{
+			activeNumbers.erase(activeNumbers.begin() + i);
+			return;
+		}
+	}
+}
+
+void NumberManager::ClearAllNumbers()
+{
+	activeNumbers.clear();
 }

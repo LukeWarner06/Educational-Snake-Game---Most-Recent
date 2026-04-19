@@ -1,6 +1,7 @@
 #pragma once
-#include "GameManager.h"
-#include "Snake.h"
+
+#include <SFML/Graphics.hpp>
+#include <iostream>
 
 class QuestionManager
 {
@@ -16,11 +17,27 @@ private:
 	int secondNumber;
 	int answer;
 
+	sf::Font font;
+	sf::Text questionText;
+
 	QuestionState currentQuestionState;
 
 public:
 	QuestionManager();
 
-	void OnItemCollected(int collectedNumber);
+	enum class QuestionEvent
+	{
+		None,
+		PickedFirstNumber,
+		PickedSecondNumber,
+		CorrectAnswer,
+		WrongAnswer
+	};
+
+	QuestionEvent OnItemCollected(int collectedNumber);
+
+	int GetAnswerValue();
+
+	void DrawCurrentQuestionOnScreen(sf::RenderWindow& window);
 };
 
