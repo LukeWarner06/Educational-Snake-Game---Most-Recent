@@ -12,6 +12,7 @@ private:
 	NumberManager numberManager{};
 
 	std::vector<int> generatedNumbers;
+	std::vector<sf::Vector2i> existingPositions;
 
 	const int GRID_WIDTH = 20;
 	const int GRID_HEIGHT = 20;
@@ -49,7 +50,7 @@ public:
 	void HandleSnakeCollision();
 
 	void SpawnNewNumber();
-	void SpawnRandomPosition(sf::Vector2i& randomGridPos);
+	void SpawnRandomPosition(sf::Vector2i& randomGridPos, const std::vector<sf::Vector2i>& existingPositions);
 
 	bool isGridSpaceOccupied(sf::Vector2i gridPos);
 

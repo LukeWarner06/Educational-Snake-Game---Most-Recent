@@ -34,12 +34,35 @@ void GameManager::DrawScoreText(sf::RenderWindow& window)
 	window.draw(scoreText);
 }
 
-void GameManager::SpawnRandomPosition(sf::Vector2i& randomGridPos)
+void GameManager::SpawnRandomPosition(sf::Vector2i& randomGridPos, const std::vector<sf::Vector2i>& existingPositions)
 {
+	bool tooClose;
+
 	do {
+		tooClose = false;
 		randomGridPos.x = std::rand() % GRID_WIDTH;
 		randomGridPos.y = std::rand() % GRID_HEIGHT;
-	} while (isGridSpaceOccupied(randomGridPos));
+
+		if (isGridSpaceOccupied(randomGridPos))
+		{
+			tooClose = true;
+			continue;
+		}
+
+		for (const auto& pos : existingPositions)
+		{
+			int dx = randomGridPos.x - pos.x;
+			int dy = randomGridPos.y - pos.y;
+
+			int distanceSquared = (dx * dx) + (dy * dy);
+
+			if (distanceSquared < 25)
+			{
+				tooClose = true;
+				break;
+			}
+		}
+	} while (tooClose);
 }
 
 void GameManager::SpawnNewNumber()
@@ -47,20 +70,19 @@ void GameManager::SpawnNewNumber()
 	sf::Vector2i randomGridPos;
 	generatedNumbers.clear();
 
-	for (int i = 0; i < 3; i++)
+	std::vector<sf::Vector2i> newPositions;
+
+	for (int i = 0; i < 10; i++)
 	{
-		SpawnRandomPosition(randomGridPos);
-		int newNumber = rand() % 11 + 1;
-		numberManager.SpawnNumber(newNumber, randomGridPos);
-		for (int num : generatedNumbers)
+		SpawnRandomPosition(randomGridPos, newPositions);
+		newPositions.push_back(randomGridPos);
+		int newNumber = rand() % 12 + 1;
+		while (std::find(generatedNumbers.begin(), generatedNumbers.end(), newNumber) != generatedNumbers.end())
 		{
-			if (num == newNumber)
-			{
-				newNumber = rand() % 11 + 1;
-				num = newNumber;
-			}
+			newNumber = rand() % 12 + 1;
 		}
 		generatedNumbers.push_back(newNumber);
+		numberManager.SpawnNumber(newNumber, randomGridPos);
 	}
 }
 
@@ -128,27 +150,42 @@ void GameManager::HandleNumberCollection()
 			int correctAnswer = questionManager.GetAnswerValue();
 			int wrongAnswer1 = questionManager.GetAnswerValue() + rand() % 5 + 2;
 			int wrongAnswer2 = questionManager.GetAnswerValue() - rand() % 5 - 2;
+			int wrongAnswer3 = questionManager.GetAnswerValue() - rand() % 5 + 2;
+			int wrongAnswer4 = questionManager.GetAnswerValue() - rand() % 5 - 2;
+			int wrongAnswer5 = questionManager.GetAnswerValue() - rand() % 5 + 2;
 
 			sf::Vector2i randomGridPos;
 			
-			SpawnRandomPosition(randomGridPos);
+			SpawnRandomPosition(randomGridPos, existingPositions);
 
 			numberManager.SpawnNumber(correctAnswer, randomGridPos);
 
-			SpawnRandomPosition(randomGridPos);
+			SpawnRandomPosition(randomGridPos, existingPositions);
 
 			numberManager.SpawnNumber(wrongAnswer1, randomGridPos);
 
-			SpawnRandomPosition(randomGridPos);
+			SpawnRandomPosition(randomGridPos, existingPositions);
 
 			numberManager.SpawnNumber(wrongAnswer2, randomGridPos);
+
+			SpawnRandomPosition(randomGridPos, existingPositions);
+
+			numberManager.SpawnNumber(wrongAnswer3, randomGridPos);
+
+			SpawnRandomPosition(randomGridPos, existingPositions);
+
+			numberManager.SpawnNumber(wrongAnswer4, randomGridPos);
+
+			SpawnRandomPosition(randomGridPos, existingPositions);
+
+			numberManager.SpawnNumber(wrongAnswer5, randomGridPos);
 		}
 
 		else if (collectedResult == QuestionManager::QuestionEvent::CorrectAnswer)
 		{
 			snake.CorrectAnswerEaten();
 			currentBackgroundColor = sf::Color(0, 255, 0, 100);
-			backgroundFlashTimer = 0.15f;
+			backgroundFlashTimer = 0.10f;
 			score += 100;
 			delay *= 0.95f;
 			numberManager.ClearAllNumbers();
@@ -159,7 +196,7 @@ void GameManager::HandleNumberCollection()
 		{
 			snake.WrongAnswerEaten();
 			currentBackgroundColor = sf::Color(255, 0, 0, 100);
-			backgroundFlashTimer = 0.15f;
+			backgroundFlashTimer = 0.10f;
 			score -= 100;
 			delay *= 1.05f;
 			numberManager.ClearAllNumbers();
