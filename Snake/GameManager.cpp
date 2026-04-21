@@ -72,14 +72,14 @@ void GameManager::SpawnNewNumber()
 
 	std::vector<sf::Vector2i> newPositions;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < difficultyScaling; i++)
 	{
 		SpawnRandomPosition(randomGridPos, newPositions);
 		newPositions.push_back(randomGridPos);
-		int newNumber = rand() % 12 + 1;
+		int newNumber = rand() % difficultyScaling + 1;
 		while (std::find(generatedNumbers.begin(), generatedNumbers.end(), newNumber) != generatedNumbers.end())
 		{
-			newNumber = rand() % 12 + 1;
+			newNumber = rand() % difficultyScaling + 1;
 		}
 		generatedNumbers.push_back(newNumber);
 		numberManager.SpawnNumber(newNumber, randomGridPos);
@@ -90,6 +90,10 @@ void GameManager::SetupGame()
 {
 	snake.CreateSnake();
 
+
+	correctAnswerCounter = 0;
+	amountOfTimes5CorrectReached = 0;
+	difficultyScaling = 5;
 
 	isGameRunning = true;
 	canChangeDirection = true;
@@ -150,9 +154,6 @@ void GameManager::HandleNumberCollection()
 			int correctAnswer = questionManager.GetAnswerValue();
 			int wrongAnswer1 = questionManager.GetAnswerValue() + rand() % 5 + 2;
 			int wrongAnswer2 = questionManager.GetAnswerValue() - rand() % 5 - 2;
-			int wrongAnswer3 = questionManager.GetAnswerValue() - rand() % 5 + 2;
-			int wrongAnswer4 = questionManager.GetAnswerValue() - rand() % 5 - 2;
-			int wrongAnswer5 = questionManager.GetAnswerValue() - rand() % 5 + 2;
 
 			sf::Vector2i randomGridPos;
 			
@@ -169,24 +170,27 @@ void GameManager::HandleNumberCollection()
 			numberManager.SpawnNumber(wrongAnswer2, randomGridPos);
 
 			SpawnRandomPosition(randomGridPos, existingPositions);
-
-			numberManager.SpawnNumber(wrongAnswer3, randomGridPos);
-
-			SpawnRandomPosition(randomGridPos, existingPositions);
-
-			numberManager.SpawnNumber(wrongAnswer4, randomGridPos);
-
-			SpawnRandomPosition(randomGridPos, existingPositions);
-
-			numberManager.SpawnNumber(wrongAnswer5, randomGridPos);
 		}
 
 		else if (collectedResult == QuestionManager::QuestionEvent::CorrectAnswer)
 		{
 			snake.CorrectAnswerEaten();
+			correctAnswerCounter++;
 			currentBackgroundColor = sf::Color(0, 255, 0, 100);
 			backgroundFlashTimer = 0.10f;
 			score += 100;
+			if (correctAnswerCounter >= 5)
+			{
+				score * 2;
+				difficultyScaling = 10;
+				amountOfTimes5CorrectReached++;
+				correctAnswerCounter = 0;
+			}
+
+			if (amountOfTimes5CorrectReached == 2)
+			{
+				difficultyScaling = 12;
+			}
 			delay *= 0.95f;
 			numberManager.ClearAllNumbers();
 			SpawnNewNumber();
@@ -198,6 +202,7 @@ void GameManager::HandleNumberCollection()
 			currentBackgroundColor = sf::Color(255, 0, 0, 100);
 			backgroundFlashTimer = 0.10f;
 			score -= 100;
+			correctAnswerCounter = 0;
 			delay *= 1.05f;
 			numberManager.ClearAllNumbers();
 			SpawnNewNumber();

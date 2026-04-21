@@ -12,6 +12,7 @@ private:
 	NumberManager numberManager{};
 
 	std::vector<int> generatedNumbers;
+	std::vector<int> answerGeneratedNumbers;
 	std::vector<sf::Vector2i> existingPositions;
 
 	const int GRID_WIDTH = 20;
@@ -35,6 +36,9 @@ private:
 	float delay = 0.15f;
 
 	int score = 0;
+	int difficultyScaling = 5;
+	int correctAnswerCounter = 0;
+	int amountOfTimes5CorrectReached = 0;
 
 	bool restartKeyReleased = true;
 
