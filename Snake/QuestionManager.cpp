@@ -17,6 +17,8 @@ QuestionManager::QuestionManager() : questionText(font)
 	questionText.setFont(font);
 	questionText.setCharacterSize(24);
 	questionText.setFillColor(sf::Color::White);
+	questionText.setOutlineThickness(1.5f);
+	questionText.setOutlineColor(sf::Color::Black);
 }
 
 QuestionManager::QuestionEvent QuestionManager::OnItemCollected(int collectedNumber)

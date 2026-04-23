@@ -11,16 +11,130 @@ Snake::Snake()
 
 void Snake::DrawSnake(sf::RenderWindow& window, int tileSize)
 {
-	sf::RectangleShape snakeSegmentShape(sf::Vector2f(tileSize, tileSize));
-	snakeSegmentShape.setFillColor(sf::Color::Green);
+	
 
+	Node* prev = nullptr;
 	Node* current = snakeHead;
+
 	while (current != nullptr)
 	{
-		snakeSegmentShape.setPosition(sf::Vector2f(current->nodePosition.x * tileSize, current->nodePosition.y * tileSize));
+		Node* next = current->nextNode;
 
-		window.draw(snakeSegmentShape);
-		current = current->nextNode;
+		float x = current->nodePosition.x * tileSize;
+		float y = current->nodePosition.y * tileSize;
+
+		float padding = 4.f;
+		float size = tileSize - padding;
+
+		sf::RectangleShape snakeSegmentShape(sf::Vector2f(size, size));
+		snakeSegmentShape.setPosition({ x + padding / 2.f, y + padding / 2.f });
+		snakeSegmentShape.setFillColor(sf::Color::Green);
+		snakeSegmentShape.setOutlineThickness(2.f);
+		snakeSegmentShape.setOutlineColor(sf::Color::Black);
+
+		if (current == snakeHead)
+		{
+			snakeSegmentShape.setFillColor(sf::Color(0, 200, 0));
+			window.draw(snakeSegmentShape);
+
+			float eyeRadius = tileSize * 0.12f;
+			sf::CircleShape eye(eyeRadius);
+			eye.setFillColor(sf::Color::White);
+
+			sf::CircleShape pupil(eyeRadius / 2.f);
+			pupil.setFillColor(sf::Color::Black);
+
+			float offsetX1, offsetY1, offsetX2, offsetY2;
+
+			switch (currentSnakeDirection)
+			{
+			case Direction::Right:
+				offsetX1 = tileSize * 0.65f; offsetY1 = tileSize * 0.25f;
+				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.65f;
+				break;
+			case Direction::Left:
+				offsetX1 = tileSize * 0.15f; offsetY1 = tileSize * 0.25f;
+				offsetX2 = tileSize * 0.15f; offsetY2 = tileSize * 0.65f;
+				break;
+			case Direction::Up:
+				offsetX1 = tileSize * 0.25f; offsetY1 = tileSize * 0.15f;
+				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.15f;
+				break;
+			case Direction::Down:
+				offsetX1 = tileSize * 0.25f; offsetY1 = tileSize * 0.65f;
+				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.65f;
+				break;
+			}
+
+			eye.setPosition({ x + offsetX1, y + offsetY1 });
+			window.draw(eye);
+
+			eye.setPosition({ x + offsetX2, y + offsetY2 });
+			window.draw(eye);
+
+			float pupilOffset = eyeRadius / 2.f;
+
+			pupil.setPosition({ x + offsetX1 + pupilOffset, y + offsetY1 + pupilOffset });
+			window.draw(pupil);
+
+			pupil.setPosition({ x + offsetX2 + pupilOffset, y + offsetY2 + pupilOffset });
+			window.draw(pupil);
+		}
+		else if (next == nullptr)
+		{
+			snakeSegmentShape.setFillColor(sf::Color(0, 150, 0));
+			window.draw(snakeSegmentShape);
+
+			sf::CircleShape tailCircle(size / 2.f);
+			tailCircle.setFillColor(sf::Color(0, 150, 0));
+			tailCircle.setPosition({ x + padding / 2.f, y + padding / 2.f });
+			window.draw(tailCircle);
+		}
+
+		else
+		{
+			sf::Vector2i dirFrom = GetDirection(prev->nodePosition, current->nodePosition);
+			sf::Vector2i dirTo = GetDirection(current->nodePosition, next->nodePosition);
+
+			if (dirFrom == dirTo)
+			{
+				snakeSegmentShape.setFillColor(sf::Color::Green);
+				window.draw(snakeSegmentShape);
+			}
+			else
+			{
+				snakeSegmentShape.setFillColor(sf::Color::Green);
+				window.draw(snakeSegmentShape);
+
+				sf::CircleShape corner(size / 2.f);
+				corner.setFillColor(sf::Color::Green);
+
+				if ((dirFrom.x == 1 && dirTo.y == 1) || (dirTo.x == 1 && dirFrom.y == 1))
+				{
+					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
+				}
+
+				else if ((dirFrom.y == 1 && dirTo.x == -1) || (dirTo.y == 1 && dirFrom.x == -1))
+				{
+					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
+				}
+
+				else if ((dirFrom.x == -1 && dirTo.y == -1) || (dirTo.x == -1 && dirFrom.y == -1))
+				{
+					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
+				}
+
+				else if ((dirFrom.y == -1 && dirTo.x == 1) || (dirTo.y == -1 && dirFrom.x == 1))
+				{
+					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
+				}
+
+				window.draw(corner);
+			}
+		}
+
+		prev = current;
+		current = next;
 	}
 }
 

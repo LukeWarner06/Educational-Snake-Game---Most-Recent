@@ -231,13 +231,11 @@ void GameManager::UpdateSnakeGame()
 				SetupGame();
 				restartKeyReleased = false;
 			}
-			
 		}
 		else
 		{
 			restartKeyReleased = true;
 		}
-
 		return;
 	}
 
@@ -311,6 +309,27 @@ bool GameManager::isGridSpaceOccupied(sf::Vector2i gridPos)
 void GameManager::ClearBackground(sf::RenderWindow& window)
 {
 	window.clear(currentBackgroundColor);
+
+	for (int row = 0; row < 800; row += 40)
+	{
+		for (int col = 0; col < 800; col += 40)
+		{
+			sf::RectangleShape cell(sf::Vector2f(40.f, 40.f));
+
+			if ((row / 40 + col / 40) % 2 == 0)
+			{
+				cell.setFillColor(sf::Color(0, 81, 215));
+			}
+			else
+			{
+				cell.setFillColor(sf::Color(0, 73, 209));
+			}
+
+			cell.setPosition(sf::Vector2f(col, row));
+
+			window.draw(cell);
+		}
+}
 }
 
 void GameManager::GameOver()
@@ -319,11 +338,17 @@ void GameManager::GameOver()
 	snake.ClearSnake();
 
 	gameOverText.setString("Game Over!");
+	gameOverText.setFillColor(sf::Color::Red);
+	gameOverText.setOutlineThickness(1.5f);
+	gameOverText.setOutlineColor(sf::Color::White);
 	sf::FloatRect gameOverRect = gameOverText.getLocalBounds();
 	gameOverText.setOrigin(gameOverRect.getCenter());
 	gameOverText.setPosition({400.f, 320.f});
 
 	finalScoreText.setString("Score: " + std::to_string(score) + "\nPress 'R' to Restart.");
+	finalScoreText.setFillColor(sf::Color::Yellow);
+	finalScoreText.setOutlineThickness(1.25f);
+	finalScoreText.setOutlineColor(sf::Color::White);
 	sf::FloatRect finalScoreRect = finalScoreText.getLocalBounds();
 	finalScoreText.setOrigin(finalScoreRect.getCenter());
 	finalScoreText.setPosition({ 400.f, 420.f });

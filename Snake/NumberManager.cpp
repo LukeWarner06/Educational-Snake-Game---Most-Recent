@@ -28,11 +28,16 @@ void NumberManager::DrawNumbers(sf::RenderWindow& window)
 	for (const auto& item : activeNumbers)
 	{
 		numberText.setString(std::to_string(item.numberValue));
+		numberText.setOutlineThickness(1.5f);
+		numberText.setOutlineColor(sf::Color::Black);
 
 		float gridX = static_cast<float>(item.gridPos.x * 40);
 		float gridY = static_cast<float>(item.gridPos.y * 40);
 
-		numberText.setPosition({ gridX + 10.f, gridY + 5.f });
+		sf::FloatRect numberRect = numberText.getLocalBounds();
+		numberText.setOrigin({ numberRect.position.x + numberRect.size.x / 2.f, numberRect.position.y + numberRect.size.y / 2.f });
+
+		numberText.setPosition({ gridX + 20.f, gridY + 20.f });
 
 		window.draw(numberText);
 	}

@@ -29,6 +29,11 @@ public:
 	Snake();
 	~Snake();
 
+	sf::Vector2i GetDirection(sf::Vector2i from, sf::Vector2i to)
+	{
+		return { to.x - from.x, to.y - from.y };
+	}
+
 	void CreateSnake();
 	void ClearSnake();
 	void SetDirection(Direction newSnakeDirection);
