@@ -3,6 +3,7 @@
 #include <vector>
 #include "NumberManager.h"
 #include "QuestionManager.h"
+#include "SoundManager.h"
 
 class GameManager
 {
@@ -10,6 +11,7 @@ private:
 	Snake snake{};
 	QuestionManager questionManager{};
 	NumberManager numberManager{};
+	SoundManager soundManager{};
 
 	std::vector<int> generatedNumbers;
 	std::vector<int> answerGeneratedNumbers;

@@ -152,12 +152,14 @@
     <ClCompile Include="NumberManager.cpp" />
     <ClCompile Include="QuestionManager.cpp" />
     <ClCompile Include="Snake.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="NumberManager.h" />
     <ClInclude Include="QuestionManager.h" />
     <ClInclude Include="Snake.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

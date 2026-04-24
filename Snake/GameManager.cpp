@@ -25,6 +25,13 @@ GameManager::GameManager() : scoreText(scoreFont), gameOverText(scoreFont), fina
 
 	currentBackgroundColor = sf::Color(0, 0, 0, 100);
 	backgroundFlashTimer = 0.f;
+
+	soundManager.Load("collect", "sounds/collect.wav");
+	soundManager.Load("correct", "sounds/correct.wav");
+	soundManager.Load("wrong", "sounds/wrong.wav");
+	soundManager.Load("grow", "sounds/grow.wav");
+	soundManager.Load("shrink", "sounds/shrink.wav");
+	soundManager.Load("gameover", "sounds/gameover.wav");
 }
 
 void GameManager::DrawScoreText(sf::RenderWindow& window)
@@ -90,7 +97,6 @@ void GameManager::SetupGame()
 {
 	snake.CreateSnake();
 
-
 	correctAnswerCounter = 0;
 	amountOfTimes5CorrectReached = 0;
 	difficultyScaling = 5;
@@ -140,6 +146,7 @@ void GameManager::HandleNumberCollection()
 	{
 		int collectedNumber = numberManager.GetNumberValueAtGridPosition(snakeHeadPosition);
 		numberManager.RemoveNumberAtGridPosition(snakeHeadPosition);
+		soundManager.Play("collect");
 		QuestionManager::QuestionEvent collectedResult = questionManager.OnItemCollected(collectedNumber);
 
 		if (collectedResult == QuestionManager::QuestionEvent::PickedFirstNumber)
@@ -176,8 +183,7 @@ void GameManager::HandleNumberCollection()
 		{
 			snake.CorrectAnswerEaten();
 			correctAnswerCounter++;
-			currentBackgroundColor = sf::Color(0, 255, 0, 100);
-			backgroundFlashTimer = 0.10f;
+			soundManager.Play("correct");
 			score += 100;
 			if (correctAnswerCounter >= 5)
 			{
@@ -199,10 +205,9 @@ void GameManager::HandleNumberCollection()
 		else if (collectedResult == QuestionManager::QuestionEvent::WrongAnswer)
 		{
 			snake.WrongAnswerEaten();
-			currentBackgroundColor = sf::Color(255, 0, 0, 100);
-			backgroundFlashTimer = 0.10f;
-			score -= 100;
+			soundManager.Play("wrong");
 			correctAnswerCounter = 0;
+			score -= 100;
 			delay *= 1.05f;
 			numberManager.ClearAllNumbers();
 			SpawnNewNumber();
@@ -241,16 +246,6 @@ void GameManager::UpdateSnakeGame()
 
 	sf::Time elapsedSinceLastUpdate = clock.restart();
 	timer += elapsedSinceLastUpdate.asSeconds();
-
-	if (backgroundFlashTimer > 0.f)
-	{
-		backgroundFlashTimer -= elapsedSinceLastUpdate.asSeconds();
-		if (backgroundFlashTimer <= 0.f)
-		{
-			currentBackgroundColor = sf::Color::Black;
-			backgroundFlashTimer = 0.f;
-		}
-	}
 
 	HandleInput();
 
@@ -329,7 +324,7 @@ void GameManager::ClearBackground(sf::RenderWindow& window)
 
 			window.draw(cell);
 		}
-}
+    }
 }
 
 void GameManager::GameOver()
