@@ -21,10 +21,8 @@ private:
 	const int GRID_HEIGHT = 20;
 
 	bool isGameRunning = false;
-	bool canChangeDirection = true;
 
 	sf::Color currentBackgroundColor;
-	float backgroundFlashTimer;
 
 	sf::Font scoreFont;
 	sf::Text scoreText;
@@ -35,7 +33,7 @@ private:
 
 	sf::Clock clock;
 	float timer = 0.f;
-	float delay = 0.15f;
+	float delay = 0.10f;
 
 	int score = 0;
 	int difficultyScaling = 5;
@@ -61,6 +59,8 @@ public:
 	bool isGridSpaceOccupied(sf::Vector2i gridPos);
 
 	void ClearBackground(sf::RenderWindow& window);
+
+	void DrawQuestionAndScoreBarrier(sf::RenderWindow& window, const int& TILE_SIZE);
 
 	void GameOver();
 

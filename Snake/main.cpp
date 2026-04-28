@@ -15,14 +15,18 @@
 
 int main()
 {
+    // Creates a random seed at the start.
     srand(time(nullptr));
 
+    // Creates a window of 800x800
     sf::RenderWindow window(sf::VideoMode({ 800, 800 }), "Educational Snake Game");
     window.setFramerateLimit(60);
     
+    // Creates the Game Manager class so that functions can be called from it.
     GameManager gameManager;
     gameManager.SetupGame();
     
+    // While loop that runs while the window is open, but stops when the window is closed.
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -38,6 +42,7 @@ int main()
         gameManager.ClearBackground(window);
         gameManager.DrawSnakeGame(window);
 
+        // Displays the window on the screen
         window.display();
     }
 

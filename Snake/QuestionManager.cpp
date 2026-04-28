@@ -1,5 +1,6 @@
 #include "QuestionManager.h"
 
+// Constructor to open the font file and set the first state of the game to finding the first number.
 QuestionManager::QuestionManager() : questionText(font)
 {
 	QuestionManager::currentQuestionState = QuestionState::FindFirstNumber;
@@ -21,6 +22,7 @@ QuestionManager::QuestionManager() : questionText(font)
 	questionText.setOutlineColor(sf::Color::Black);
 }
 
+// Updates the Game State depending on what item has been collected.
 QuestionManager::QuestionEvent QuestionManager::OnItemCollected(int collectedNumber)
 {
 	switch (currentQuestionState)
@@ -44,11 +46,13 @@ QuestionManager::QuestionEvent QuestionManager::OnItemCollected(int collectedNum
 	return QuestionEvent::None;
 }
 
+// Returns the value of the answer.
 int QuestionManager::GetAnswerValue()
 {
 	return answer;
 }
 
+// Draws the current question on the window, depending on what game state we are in.
 void QuestionManager::DrawCurrentQuestionOnScreen(sf::RenderWindow& window)
 {
 	switch (currentQuestionState)
@@ -72,6 +76,7 @@ void QuestionManager::DrawCurrentQuestionOnScreen(sf::RenderWindow& window)
 	window.draw(questionText);
 }
 
+// Resetst the question back to the beginning.
 void QuestionManager::ResetQuestion()
 {
 	QuestionManager::currentQuestionState = QuestionState::FindFirstNumber;

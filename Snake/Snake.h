@@ -23,7 +23,16 @@ private:
 	Node* snakeHead;
 	Node* snakeTail;
 	Direction currentSnakeDirection;
-	Direction lastSnakeDirection;
+	Direction queuedDirection;
+
+	int tailX = 8;
+	int tailY = 10;
+
+	int bodyX = 9;
+	int bodyY = 10;
+
+	int headX = 10;
+	int headY = 10;
 
 public:
 	Snake();

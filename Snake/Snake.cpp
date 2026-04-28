@@ -1,157 +1,73 @@
 #include "Snake.h"
 #include <SFML/Window/Keyboard.hpp>
 
+// Constructor to set everything to their default values.
 Snake::Snake()
 {
 	snakeHead = nullptr;
 	snakeTail = nullptr;
 	isAlive = false;
 	hasEatenCorrectAnswer = false;
+
+	currentSnakeDirection = Direction::Right;
+	queuedDirection = Direction::Right;
 }
 
+//Draws the snake on the screen bit by bit, starting with head and ending with tail
 void Snake::DrawSnake(sf::RenderWindow& window, int tileSize)
 {
-	
-
-	Node* prev = nullptr;
 	Node* current = snakeHead;
 
 	while (current != nullptr)
 	{
-		Node* next = current->nextNode;
-
 		float x = current->nodePosition.x * tileSize;
 		float y = current->nodePosition.y * tileSize;
 
-		float padding = 4.f;
-		float size = tileSize - padding;
-
-		sf::RectangleShape snakeSegmentShape(sf::Vector2f(size, size));
-		snakeSegmentShape.setPosition({ x + padding / 2.f, y + padding / 2.f });
-		snakeSegmentShape.setFillColor(sf::Color::Green);
+		sf::RectangleShape snakeSegmentShape(sf::Vector2f(tileSize - 4.f, tileSize - 4.f));
+		snakeSegmentShape.setPosition({ x + 2.f, y + 2.f });
 		snakeSegmentShape.setOutlineThickness(2.f);
 		snakeSegmentShape.setOutlineColor(sf::Color::Black);
 
 		if (current == snakeHead)
 		{
+			snakeSegmentShape.setSize(sf::Vector2f(tileSize - 3.f, tileSize - 3.f));
+			snakeSegmentShape.setPosition({x + 1.f, y + 1.f});
 			snakeSegmentShape.setFillColor(sf::Color(0, 200, 0));
-			window.draw(snakeSegmentShape);
+			snakeSegmentShape.setOutlineColor(sf::Color::Yellow);
 
-			float eyeRadius = tileSize * 0.12f;
-			sf::CircleShape eye(eyeRadius);
-			eye.setFillColor(sf::Color::White);
-
-			sf::CircleShape pupil(eyeRadius / 2.f);
-			pupil.setFillColor(sf::Color::Black);
-
-			float offsetX1, offsetY1, offsetX2, offsetY2;
-
-			switch (currentSnakeDirection)
-			{
-			case Direction::Right:
-				offsetX1 = tileSize * 0.65f; offsetY1 = tileSize * 0.25f;
-				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.65f;
-				break;
-			case Direction::Left:
-				offsetX1 = tileSize * 0.15f; offsetY1 = tileSize * 0.25f;
-				offsetX2 = tileSize * 0.15f; offsetY2 = tileSize * 0.65f;
-				break;
-			case Direction::Up:
-				offsetX1 = tileSize * 0.25f; offsetY1 = tileSize * 0.15f;
-				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.15f;
-				break;
-			case Direction::Down:
-				offsetX1 = tileSize * 0.25f; offsetY1 = tileSize * 0.65f;
-				offsetX2 = tileSize * 0.65f; offsetY2 = tileSize * 0.65f;
-				break;
-			}
-
-			eye.setPosition({ x + offsetX1, y + offsetY1 });
-			window.draw(eye);
-
-			eye.setPosition({ x + offsetX2, y + offsetY2 });
-			window.draw(eye);
-
-			float pupilOffset = eyeRadius / 2.f;
-
-			pupil.setPosition({ x + offsetX1 + pupilOffset, y + offsetY1 + pupilOffset });
-			window.draw(pupil);
-
-			pupil.setPosition({ x + offsetX2 + pupilOffset, y + offsetY2 + pupilOffset });
-			window.draw(pupil);
+			sf::CircleShape dot(3.f);
+			dot.setFillColor(sf::Color::Yellow);
+			dot.setPosition({ x + tileSize / 2.f - 3.f, y + tileSize / 2.f - 3.f });
+			window.draw(dot);
 		}
-		else if (next == nullptr)
+		else if (current->nextNode == nullptr)
 		{
 			snakeSegmentShape.setFillColor(sf::Color(0, 150, 0));
-			window.draw(snakeSegmentShape);
-
-			sf::CircleShape tailCircle(size / 2.f);
-			tailCircle.setFillColor(sf::Color(0, 150, 0));
-			tailCircle.setPosition({ x + padding / 2.f, y + padding / 2.f });
-			window.draw(tailCircle);
 		}
-
 		else
 		{
-			sf::Vector2i dirFrom = GetDirection(prev->nodePosition, current->nodePosition);
-			sf::Vector2i dirTo = GetDirection(current->nodePosition, next->nodePosition);
-
-			if (dirFrom == dirTo)
-			{
-				snakeSegmentShape.setFillColor(sf::Color::Green);
-				window.draw(snakeSegmentShape);
-			}
-			else
-			{
-				snakeSegmentShape.setFillColor(sf::Color::Green);
-				window.draw(snakeSegmentShape);
-
-				sf::CircleShape corner(size / 2.f);
-				corner.setFillColor(sf::Color::Green);
-
-				if ((dirFrom.x == 1 && dirTo.y == 1) || (dirTo.x == 1 && dirFrom.y == 1))
-				{
-					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
-				}
-
-				else if ((dirFrom.y == 1 && dirTo.x == -1) || (dirTo.y == 1 && dirFrom.x == -1))
-				{
-					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
-				}
-
-				else if ((dirFrom.x == -1 && dirTo.y == -1) || (dirTo.x == -1 && dirFrom.y == -1))
-				{
-					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
-				}
-
-				else if ((dirFrom.y == -1 && dirTo.x == 1) || (dirTo.y == -1 && dirFrom.x == 1))
-				{
-					corner.setPosition({ x + padding / 2.f, y + padding / 2.f });
-				}
-
-				window.draw(corner);
-			}
+			snakeSegmentShape.setFillColor(sf::Color::Green);
 		}
-
-		prev = current;
-		current = next;
+		window.draw(snakeSegmentShape);
+		current = current->nextNode;
 	}
 }
 
+// Creates the actual snake segments within the linked list.
 void Snake::CreateSnake()
 {
 	ClearSnake();
 
 	Node* newTail = new Node;
-	newTail->nodePosition = sf::Vector2i(8, 10);
+	newTail->nodePosition = sf::Vector2i(tailX, tailY);
 	newTail->nextNode = nullptr;
 
 	Node* newMiddle = new Node;
-	newMiddle->nodePosition = sf::Vector2i(9, 10);
+	newMiddle->nodePosition = sf::Vector2i(bodyX, bodyY);
 	newMiddle->nextNode = newTail;
 
 	Node* newHead = new Node;
-	newHead->nodePosition = sf::Vector2i(10, 10);
+	newHead->nodePosition = sf::Vector2i(headX, headY);
 	newHead->nextNode = newMiddle;
 
 	snakeHead = newHead;
@@ -164,6 +80,7 @@ void Snake::CreateSnake()
 	hasEatenCorrectAnswer = false;
 }
 
+// Empties the linked list completely and updates the game to tell it the snake is no longer alive.
 void Snake::ClearSnake()
 {
 	Node* current = snakeHead;
@@ -179,13 +96,17 @@ void Snake::ClearSnake()
 	isAlive = false;
 }
 
+// Destructor to clear the snake.
 Snake::~Snake()
 {
 	ClearSnake();
 }
 
+// Snake Movement, based off of an enum and switch cases.
 void Snake::MoveSnake()
 {
+	currentSnakeDirection = queuedDirection;
+
 	if (snakeHead == nullptr || !isAlive)
 	{
 		return;
@@ -209,6 +130,13 @@ void Snake::MoveSnake()
 	case Direction::Right:
 		newHeadPosition = snakeHead->nodePosition + sf::Vector2i(1, 0);
 		break;
+	}
+
+	if (newHeadPosition.y < 2)
+	{
+		isAlive = false;
+		ClearSnake();
+		return;
 	}
 
 	Node* newHead = new Node;
@@ -246,35 +174,26 @@ void Snake::MoveSnake()
 		}
 		current = current->nextNode;
 	}
-
-	lastSnakeDirection = currentSnakeDirection;
 }
 
-void Snake::SetDirection(Direction newSnakeDirection)
+// sets the current direction and checks if the new direction is the opposite of the current, if it is then the queued direction becomes the same as new direction.
+void Snake::SetDirection(Direction newDirection)
 {
-	if (lastSnakeDirection == Direction::Up && newSnakeDirection != Direction::Down)
-	{
-		currentSnakeDirection = newSnakeDirection;
-	}
-	else if (lastSnakeDirection == Direction::Down && newSnakeDirection != Direction::Up)
-	{
-		currentSnakeDirection = newSnakeDirection;
-	}
-	else if (lastSnakeDirection == Direction::Right && newSnakeDirection != Direction::Left)
-	{
-		currentSnakeDirection = newSnakeDirection;
-	}
-	else if (lastSnakeDirection == Direction::Left && newSnakeDirection != Direction::Right)
-	{
-		currentSnakeDirection = newSnakeDirection;
-	}
+	if (currentSnakeDirection == Direction::Up && newDirection == Direction::Down) return;
+	if (currentSnakeDirection == Direction::Down && newDirection == Direction::Up) return;
+	if (currentSnakeDirection == Direction::Left && newDirection == Direction::Right) return;
+	if (currentSnakeDirection == Direction::Right && newDirection == Direction::Left) return;
+
+	queuedDirection = newDirection;
 }
 
+// Updates boolean to tell game that the right answers been eaten.
 void Snake::CorrectAnswerEaten()
 {
 	hasEatenCorrectAnswer = true;
 }
 
+// Updates boolean to tell game the wrong answers been eaten, deletes the tail, checks if theres only 1 segment left in the snake and if so, clears the snake, as its dead.
 void Snake::WrongAnswerEaten()
 {
 	hasEatenCorrectAnswer = false;
@@ -304,11 +223,13 @@ void Snake::WrongAnswerEaten()
 	}
 }
 
+// Returns the value of isAlive.
 bool Snake::IsAlive()
 {
 	return isAlive;
 }
 
+// Gets the current position of the snake's head.
 sf::Vector2i Snake::GetHeadPosition()
 {
 	if (snakeHead == nullptr)
@@ -318,6 +239,7 @@ sf::Vector2i Snake::GetHeadPosition()
 	return snakeHead->nodePosition;
 }
 
+// Checks if the snake is on a specific grid position.
 bool Snake::isGridPositionOnSnake(sf::Vector2i pos)
 {
 	Node* current = snakeHead;

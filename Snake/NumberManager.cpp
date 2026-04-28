@@ -1,6 +1,7 @@
 #include "NumberManager.h"
 #include <iostream>
 
+// Constructor for Number manager, opens the font file and sets all the values of the font.
 NumberManager::NumberManager() : numberText(numberFont)
 {
 	if (!numberFont.openFromFile("assets/Times New Roman Bold.ttf"))
@@ -14,6 +15,7 @@ NumberManager::NumberManager() : numberText(numberFont)
 	numberText.setFillColor(sf::Color::Yellow);
 }
 
+// Spawns new numbers and pushes them to the back of the vector.
 void NumberManager::SpawnNumber(int value, sf::Vector2i gridPos)
 {
 	NumberItem newNumber;
@@ -23,6 +25,7 @@ void NumberManager::SpawnNumber(int value, sf::Vector2i gridPos)
 	activeNumbers.push_back(newNumber);
 }
 
+// Draws the numbers in the vector as a string on the window.
 void NumberManager::DrawNumbers(sf::RenderWindow& window)
 {
 	for (const auto& item : activeNumbers)
@@ -43,6 +46,7 @@ void NumberManager::DrawNumbers(sf::RenderWindow& window)
 	}
 }
 
+// Checks if the number is at a specific grid position.
 bool NumberManager::IsNumberAtPosition(sf::Vector2i gridPos)
 {
 	for (const auto& item : activeNumbers)
@@ -55,6 +59,7 @@ bool NumberManager::IsNumberAtPosition(sf::Vector2i gridPos)
 	return false;
 }
 
+// Gets the value of the number at a specific grid position.
 int NumberManager::GetNumberValueAtGridPosition(sf::Vector2i gridPos)
 {
 	for (const auto& item : activeNumbers)
@@ -81,6 +86,7 @@ void NumberManager::RemoveNumberAtGridPosition(sf::Vector2i gridPos)
 	}
 }
 
+// Clears all the numbers inside the vector.
 void NumberManager::ClearAllNumbers()
 {
 	activeNumbers.clear();
