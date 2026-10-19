@@ -6,6 +6,8 @@ A C++ and SFML game that combines grid-based Snake gameplay with multiplication 
 **Technologies:** C++20, SFML 3.0.0, Visual Studio 2022  
 **Project context:** University project developed from a lecturer-provided starter framework.
 
+https://github.com/user-attachments/assets/b25a0c2d-2cf2-4d69-a0ee-43cb4232d164
+
 ## How to play
 
 1. Collect a number to choose the first value in the multiplication question.
