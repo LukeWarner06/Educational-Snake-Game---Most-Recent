@@ -8,6 +8,14 @@ A C++ and SFML game that combines grid-based Snake gameplay with multiplication 
 
 https://github.com/user-attachments/assets/b25a0c2d-2cf2-4d69-a0ee-43cb4232d164
 
+## Download and play
+
+[Download Educational Snake for Windows](https://github.com/LukeWarner06/Educational-Snake-Game---Most-Recent/releases/download/v1.0.0/Educational.Snake.Windows.zip)
+
+Extract the whole ZIP, then open the included `.exe`. Keep all included files and folders together.
+
+**Controls:** Arrow keys or WASD to move. Press R to restart after game over.
+
 ## How to play
 
 1. Collect a number to choose the first value in the multiplication question.
